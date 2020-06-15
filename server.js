@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
+var cors = require("cors");
 
 const users = require("./routes/api/users");
 const profile = require("./routes/api/profile");
@@ -15,6 +16,17 @@ app.use(bodyParser.json());
 
 // DB Config
 const db = require("./config/keys").mongoURI;
+
+// Cors in express.js
+
+const corsParameter = require("./config/keys").corsParameters;
+
+var corsOptions = {
+  origin: corsParameter,
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+app.use(cors(corsOptions));
 
 // Connect to MongoDB
 mongoose
