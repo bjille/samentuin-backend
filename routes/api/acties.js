@@ -16,7 +16,8 @@ router.get("/test", (req, res) => res.json({ msg: "Acties works" }));
 router.get("/", (req, res) => {
   Actie.find()
     .sort({})
-    .then((acties) => res.json(acties).catch((err) => res.status(404)));
+    .then((acties) => res.json(acties))
+    .catch((err) => res.status(404));
 });
 
 router.post("/", (req, res) => {
@@ -24,43 +25,17 @@ router.post("/", (req, res) => {
   //     const response = { status: "OK" };
   //     return res.status(400).json(response);
   //   }
-  //   console.log(req.body);
+  console.log(req.body);
 
-  const newActie = new Actie({
-    naam: req.body.naam,
-    perceelNummer: req.body.perceelNummer,
-    actieStartDate: req.body.actieStartDate,
-    actieEndDate: req.body.actieEndDate,
-    serre: req.body.serre,
-    boolWater: req.body.boolWater,
-    opmerking: req.body.opmerking,
-    type: req.body.type,
-    childActions: req.body.childActions,
-    linkedId: req.body.linkedId,
-  });
+  const newActie = new Actie({ ...req.body });
 
-  const editAction = {
-    naam: req.body.naam,
-    perceelNummer: req.body.perceelNummer,
-    actieStartDate: req.body.actieStartDate,
-    actieEndDate: req.body.actieEndDate,
-    serre: req.body.serre,
-    boolWater: req.body.boolWater,
-    opmerking: req.body.opmerking,
-    type: req.body.type,
-    childActions: req.body.childActions,
-    linkedId: req.body.linkedId,
-  };
+  const editAction = { ...req.body };
 
   Actie.findOne({ _id: req.body._id }).then((actie) => {
-    console.log("request id = " + req.body._id);
-    // console.log(actie);
+    console.log("request id = " + req.body);
     if (actie) {
-      //   console.log("updateactie");
-      console.log(editAction);
       // UPDATE
       delete actie._id;
-      //   console.log(newActie);
       Actie.findOneAndUpdate(
         { _id: actie._id },
         { $set: editAction },
@@ -69,7 +44,6 @@ router.post("/", (req, res) => {
         .then((actie) => res.json(actie))
         .catch((err) => res.json(err));
     } else {
-      //   console.log("newactie");
       // CREATE NEW
       newActie
         .save()

@@ -7,6 +7,7 @@ var cors = require("cors");
 const users = require("./routes/api/users");
 const profile = require("./routes/api/profile");
 const acties = require("./routes/api/acties");
+const groentenInfo = require("./routes/api/groentenInfo");
 
 const app = express();
 
@@ -46,6 +47,7 @@ require("./config/passport")(passport);
 app.use("/api/users", users);
 app.use("/api/profile", profile);
 app.use("/api/acties", acties);
+app.use("/api/groenteninfo", groentenInfo);
 
 // process.env.port voor Heroku
 const port = process.env.PORT || 5000;

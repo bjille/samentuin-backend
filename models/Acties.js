@@ -13,6 +13,7 @@ const ActieSchema = new Schema({
   type: { type: String, required: true },
   childActions: { type: Array, required: false },
   linkedId: { type: String, required: false },
+  date: { type: Date, default: Date.now },
 });
 
-module.exports = Actie = mongoose.model("acties", ActieSchema);
+module.exports = Actie = mongoose.model("actie", ActieSchema);
