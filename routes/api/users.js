@@ -29,7 +29,8 @@ router.post("/register", (req, res) => {
       });
 
       const newUser = new User({
-        name: req.body.name,
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
         email: req.body.email,
         avatar,
         password: req.body.password,
@@ -42,7 +43,10 @@ router.post("/register", (req, res) => {
           newUser
             .save()
             .then((user) => res.json(user))
-            .catch((err) => console.log(err));
+            .catch((err) => {
+              console.log(err);
+              return res.status(404).json(err);
+            });
         });
       });
     }
