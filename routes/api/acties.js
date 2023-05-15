@@ -5,6 +5,11 @@ const passport = require("passport");
 
 const Actie = require("../../models/Acties");
 
+var corsOptions = {
+  origin: '*', //corsParameter
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
 // Authenticatie verwijderen = passport.authenticate("jwt", { session: false }), -lijntje in commentaar zetten
 
 // @route	GET api/acties/test
@@ -17,7 +22,7 @@ router.get("/test", (req, res) => res.json({
 // @route	GET api/acties
 // @desc	Acties ophalen
 // @access	Public
-router.get("/", (req, res) => {
+router.get("/", cors(corsOptions), (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   // console.log(req.body);
   Actie.find()
