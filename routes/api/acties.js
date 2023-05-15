@@ -10,12 +10,15 @@ const Actie = require("../../models/Acties");
 // @route	GET api/acties/test
 // @desc	Tests acties route
 // @access	Public
-router.get("/test", (req, res) => res.json({ msg: "Acties works" }));
+router.get("/test", (req, res) => res.json({
+  msg: "Acties works"
+}));
 
 // @route	GET api/acties
 // @desc	Acties ophalen
 // @access	Public
 router.get("/", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
   // console.log(req.body);
   Actie.find()
     .sort({})
@@ -32,7 +35,9 @@ router.get("/", (req, res) => {
 
 router.post(
   "/",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", {
+    session: false
+  }),
   (req, res) => {
     //   if (1) {
     //     const response = { status: "OK" };
@@ -40,20 +45,28 @@ router.post(
     //   }
     console.log(req.body);
 
-    const newActie = new Actie({ ...req.body });
+    const newActie = new Actie({
+      ...req.body
+    });
 
-    const editAction = { ...req.body };
+    const editAction = {
+      ...req.body
+    };
 
-    Actie.findOne({ _id: req.body._id }).then((actie) => {
+    Actie.findOne({
+      _id: req.body._id
+    }).then((actie) => {
       if (actie) {
         // UPDATE
         console.log("aanpassing actie");
         delete actie._id;
-        Actie.findOneAndUpdate(
-          { _id: actie._id },
-          { $set: editAction },
-          { new: true }
-        )
+        Actie.findOneAndUpdate({
+            _id: actie._id
+          }, {
+            $set: editAction
+          }, {
+            new: true
+          })
           .then((actie) => res.json(actie))
           .catch((err) => {
             console.log(err);
@@ -96,12 +109,16 @@ router.post(
 
 router.delete(
   "/:id",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", {
+    session: false
+  }),
   (req, res) => {
     console.log(req.params.id);
     Actie.findById(req.params.id)
       .then((actie) => {
-        actie.remove().then(() => res.json({ success: "success" }));
+        actie.remove().then(() => res.json({
+          success: "success"
+        }));
       })
       .catch((err) => {
         console.log(err);
