@@ -25,11 +25,11 @@ const db = require("./config/keys").mongoURI;
 const corsParameter = require("./config/keys").corsParameters;
 
 var corsOptions = {
-  origin: ['https://samentuin-de-origine.netlify.app/'],
+  origin: corsParameter,
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 // Connect to MongoDB
 mongoose
