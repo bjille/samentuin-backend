@@ -5,6 +5,8 @@ const passport = require("passport");
 
 const Actie = require("../../models/Acties");
 
+// Authenticatie verwijderen = passport.authenticate("jwt", { session: false }), -lijntje in commentaar zetten
+
 // @route	GET api/acties/test
 // @desc	Tests acties route
 // @access	Public
@@ -14,103 +16,98 @@ router.get("/test", (req, res) => res.json({ msg: "Acties works" }));
 // @desc	Acties ophalen
 // @access	Public
 router.get("/", (req, res) => {
+  // console.log(req.body);
   Actie.find()
     .sort({})
     .then((acties) => res.json(acties))
-    .catch((err) => res.status(404));
+    .catch((err) => {
+      console.log(err);
+      return res.json(err);
+    });
 });
 
-router.post("/", (req, res) => {
-  //   if (1) {
-  //     const response = { status: "OK" };
-  //     return res.status(400).json(response);
-  //   }
-  console.log(req.body);
+// @route	POST api/acties
+// @desc	Nieuwe actie aanmaken / editten
+// @access	Private
 
-  const newActie = new Actie({ ...req.body });
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    //   if (1) {
+    //     const response = { status: "OK" };
+    //     return res.status(400).json(response);
+    //   }
+    console.log(req.body);
 
-  const editAction = { ...req.body };
+    const newActie = new Actie({ ...req.body });
 
-  Actie.findOne({ _id: req.body._id }).then((actie) => {
-    console.log("request id = " + req.body);
-    if (actie) {
-      // UPDATE
-      delete actie._id;
-      Actie.findOneAndUpdate(
-        { _id: actie._id },
-        { $set: editAction },
-        { new: true }
-      )
-        .then((actie) => res.json(actie))
-        .catch((err) => res.json(err));
-    } else {
-      // CREATE NEW
-      newActie
-        .save()
-        .then((actie) => res.json(actie))
-        .catch((err) => res.json(err));
-    }
-  });
-});
+    const editAction = { ...req.body };
 
-// @route	GET api/acties
-// @desc	Acties ophalen zonder authenticatie
+    Actie.findOne({ _id: req.body._id }).then((actie) => {
+      if (actie) {
+        // UPDATE
+        console.log("aanpassing actie");
+        delete actie._id;
+        Actie.findOneAndUpdate(
+          { _id: actie._id },
+          { $set: editAction },
+          { new: true }
+        )
+          .then((actie) => res.json(actie))
+          .catch((err) => {
+            console.log(err);
+            return res.json(err);
+          });
+      } else {
+        // CREATE NEW
+        console.log("nieuwe actie");
+        newActie
+          .save()
+          .then((actie) => res.json(actie))
+          .catch((err) => {
+            console.log(err);
+            return res.json(err);
+          });
+      }
+    });
+  }
+);
+
+// @route	DELETE api/acties
+// @desc	Actie deleteten zonder authenticatie
 // @access	Public
 
-router.delete("/:id", (req, res) => {
-  Actie.findById(req.params.id)
-    .then((actie) => {
-      actie.remove().then(() => res.json({ success: "success" }));
-    })
-    .catch((err) =>
-      res.status(404).json({ actionnotfound: "geen acties gevonden" })
-    );
-});
+// router.delete("/:id", (req, res) => {
+//   console.log(req.params.id);
+//   Actie.findById(req.params.id)
+//     .then((actie) => {
+//       actie.remove().then(() => res.json({ success: "success" }));
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       return res.json(err);
+//     });
+// });
 
 // @route	DELETE api/acties
 // @desc	Actie deleteten met authenticatie
 // @access	Private
 
-// router.delete(
-//   "/:id",
-//   passport.authenticate("jwt", { session: false }, (req, res) => {
-//     Actie.findById(req.params.id)
-//       .then((actie) => {})
-//       .catch((err) =>
-//         res.status(404).json({ actionnotfound: "geen acties gevonden" })
-//       );
-//   })
-// );
-
-// @route	POST api/acties
-// @desc	Actie creeren met authenticatie
-// @access	Private
-// router.post(
-//   "/",
-//   passport.authenticate("jwt", { session: false }, (req, res) => {
-//     const newActie = new Actie({
-//       naam: req.body.naam,
-//       perceelnummer: req.body.perceelNummer,
-//       actieStartDate: req.body.actieStartDate,
-//       actieEndDate: req.body.actieEndDate,
-//       serre: req.body.serre,
-//       boolWater: req.body.boolWater,
-//       opmerking: req.body.opmerking,
-//       type: req.body.type,
-//       childActions: req.body.childActions,
-//       linkedId: req.body.linkedId,
-//     });
-
-//     newActie.save().then((actie) => res.json(actie));
-//   })
-// );
-
-// @route	POST api/acties
-// @desc	Actie creeren zonder authenticatie
-// @access	Public
-
-router.get("/", (req, res) => {
-  res.json();
-});
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    console.log(req.params.id);
+    Actie.findById(req.params.id)
+      .then((actie) => {
+        actie.remove().then(() => res.json({ success: "success" }));
+      })
+      .catch((err) => {
+        console.log(err);
+        return res.json(err);
+      });
+  }
+);
 
 module.exports = router;
