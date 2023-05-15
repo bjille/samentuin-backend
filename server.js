@@ -12,7 +12,9 @@ const groentenInfo = require("./routes/api/groentenInfo");
 const app = express();
 
 // Body parser middleWare
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(bodyParser.json());
 
 // DB Config
@@ -23,7 +25,7 @@ const db = require("./config/keys").mongoURI;
 const corsParameter = require("./config/keys").corsParameters;
 
 var corsOptions = {
-  origin: corsParameter,
+  origin: ['https://samentuin-de-origine.netlify.app/'],
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
