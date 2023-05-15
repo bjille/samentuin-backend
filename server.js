@@ -25,7 +25,7 @@ const db = require("./config/keys").mongoURI;
 const corsParameter = require("./config/keys").corsParameters;
 
 var corsOptions = {
-  origin: corsParameter,
+  origin: '*', //corsParameter
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
