@@ -17,6 +17,7 @@ router.get("/", (req, res) => {
   GroentenInfo.find()
     .sort({})
     .then((groenteninfo) => {
+      console.log(groenteninfo);
       return res.json(groenteninfo);
     })
     .catch((err) => {
