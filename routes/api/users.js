@@ -5,12 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const passport = require("passport");
-const cors = require('cors')
 
-var corsOptions = {
-  origin: '*', //corsParameter
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
 
 // Load User Model
 const User = require("../../models/User");
@@ -25,7 +20,7 @@ router.get("/test", (req, res) => res.json({
 // @route	GET api/users/test
 // @desc	Tests users route
 // @access	Public
-router.post("/register", cors(corsOptions), (req, res) => {
+router.post("/register", (req, res) => {
   User.findOne({
     email: req.body.email
   }).then((user) => {
@@ -64,7 +59,7 @@ router.post("/register", cors(corsOptions), (req, res) => {
 // @route	GET api/users/login
 // @desc	Login User / Return JWT Token
 // @access	Public
-router.post("/login", cors(corsOptions), (req, res) => {
+router.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 

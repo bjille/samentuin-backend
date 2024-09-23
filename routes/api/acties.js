@@ -2,14 +2,14 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const passport = require("passport");
-const cors = require('cors')
+// const cors = require('cors')
 
 const Actie = require("../../models/Acties");
 
-var corsOptions = {
-  origin: '*', //corsParameter
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
+// var corsOptions = {
+//   origin: '*', //corsParameter
+//   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+// };
 
 // Authenticatie verwijderen = passport.authenticate("jwt", { session: false }), -lijntje in commentaar zetten
 
@@ -23,7 +23,7 @@ router.get("/test", (req, res) => res.json({
 // @route	GET api/acties
 // @desc	Acties ophalen
 // @access	Public
-router.get("/", cors(corsOptions), (req, res) => {
+router.get("/", (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   // console.log(req.body);
   Actie.find()
